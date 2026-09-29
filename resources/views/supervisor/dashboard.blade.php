@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Supervisor - E-Bank</title>
+    <title>Dashboard Supervisor</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-50 font-sans">
@@ -12,7 +12,7 @@
     <nav class="bg-indigo-700 text-white shadow-md relative">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
-                <div class="text-xl font-bold tracking-wider">E-Bank | Supervisor</div>
+                <div class="text-xl font-bold tracking-wider">LKM Mitra Siswa Abadi</div>
                 <div class="flex items-center space-x-6">
                     <a href="{{ url('/supervisor/dashboard') }}" class="text-white font-bold underline decoration-2 underline-offset-4">Dashboard</a>
                     <a href="{{ url('/supervisor/laporan') }}" class="text-indigo-200 hover:text-white transition font-medium">Laporan Transaksi</a>
