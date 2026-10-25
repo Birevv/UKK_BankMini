@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profil Saya - E-Teller</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        html {
+            scrollbar-gutter: stable;
+            overflow-y: scroll;
+        }
+    </style>
 </head>
 <body class="bg-slate-50 font-sans">
 

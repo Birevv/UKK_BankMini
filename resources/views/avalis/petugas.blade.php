@@ -20,16 +20,35 @@
             <div class="flex justify-between h-16 items-center">
                 <div class="text-xl font-bold tracking-wider">LKM Mitra Siswa Abadi</div>
 
-                <div class="flex items-center space-x-6">
-                    <a href="{{ url('/admin/dashboard') }}" class="text-slate-300 hover:text-white transition font-medium">Dashboard</a>
-                    <a href="{{ url('/admin/data-nasabah') }}" class="text-slate-300 hover:text-white transition font-medium">Manajemen Nasabah</a>
-                    <a href="{{ url('/avalis/petugas') }}" class="text-white font-medium underline decoration-2 underline-offset-4">Petugas Avalis</a>
-                    <a href="{{ url('/laporan/jurnal') }}" class="text-slate-300 hover:text-white transition font-medium">Jurnal</a>
-                    <a href="{{ url('/admin/audit') }}" class="text-slate-300 hover:text-white transition font-medium">Jejak Audit</a>
-                    <a href="{{ url('/admin/absensi-avalis') }}" class="text-slate-300 hover:text-white transition font-medium flex items-center">
-                        <svg class="w-4 h-4 mr-1 text-emerald-400" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14h-2v-4H6v-2h4V7h2v4h4v2h-4v4z"/></svg>
-                        Absensi
-                    </a>
+                @if(Auth::user()->role === 'supervisor')
+                    <div class="flex items-center space-x-5 text-sm">
+                        <a href="{{ url('/supervisor/dashboard') }}" class="text-slate-300 hover:text-white transition font-medium">Dashboard</a>
+                        <a href="{{ url('/supervisor/laporan') }}" class="text-slate-300 hover:text-white transition font-medium">Laporan Transaksi</a>
+                        <a href="{{ url('/supervisor/daily-report') }}" class="text-slate-300 hover:text-white transition font-medium flex items-center">
+                            <svg class="w-4 h-4 mr-1 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                            Daily Report
+                        </a>
+                        <a href="{{ url('/supervisor/pengajuan-kas') }}" class="text-slate-300 hover:text-white transition font-medium flex items-center">
+                            <svg class="w-4 h-4 mr-1 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            Pengajuan Kas
+                        </a>
+                        <a href="{{ url('/laporan/jurnal') }}" class="text-slate-300 hover:text-white transition font-medium">Jurnal</a>
+                        <a href="{{ url('/laporan/saldo-produk') }}" class="text-slate-300 hover:text-white transition font-medium">Produk</a>
+                        <a href="{{ url('/laporan/tahunan') }}" class="text-slate-300 hover:text-white transition font-medium">Tahunan</a>
+                        <a href="{{ url('/avalis/petugas') }}" class="text-white font-medium underline decoration-2 underline-offset-4">Data Teller</a>
+                        <a href="{{ url('/supervisor/absensi-avalis') }}" class="text-slate-300 hover:text-white transition font-medium">Absensi</a>
+                @else
+                    <div class="flex items-center space-x-6">
+                        <a href="{{ url('/admin/dashboard') }}" class="text-slate-300 hover:text-white transition font-medium">Dashboard</a>
+                        <a href="{{ url('/admin/data-nasabah') }}" class="text-slate-300 hover:text-white transition font-medium">Manajemen Nasabah</a>
+                        <a href="{{ url('/avalis/petugas') }}" class="text-white font-medium underline decoration-2 underline-offset-4">Petugas Avalis</a>
+                        <a href="{{ url('/laporan/jurnal') }}" class="text-slate-300 hover:text-white transition font-medium">Jurnal</a>
+                        <a href="{{ url('/admin/audit') }}" class="text-slate-300 hover:text-white transition font-medium">Jejak Audit</a>
+                        <a href="{{ url('/admin/absensi-avalis') }}" class="text-slate-300 hover:text-white transition font-medium flex items-center">
+                            <svg class="w-4 h-4 mr-1 text-emerald-400" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14h-2v-4H6v-2h4V7h2v4h4v2h-4v4z"/></svg>
+                            Absensi
+                        </a>
+                @endif
 
                     <!-- PROFIL DROPDOWN -->
                     <div class="relative ml-3">

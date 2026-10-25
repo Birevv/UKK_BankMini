@@ -140,6 +140,9 @@ Route::middleware(['auth'])->group(function () {
 
     // CETAK LEMBAR DAILY REPORT
     Route::get('/daily-report/cetak/{id}', [DailyReportController::class, 'cetak']);
+
+    // PORTAL DASHBOARD NASABAH
+    Route::get('/nasabah/dashboard', [NasabahController::class, 'dashboardNasabah']);
 });
 
 // HELPER DATABASE & STORAGE

@@ -7,6 +7,12 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Library HTML5 QR Code Scanner -->
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <style>
+        html {
+            scrollbar-gutter: stable;
+            overflow-y: scroll;
+        }
+    </style>
 </head>
 <body class="bg-slate-50 font-sans">
 

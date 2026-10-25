@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profil Supervisor</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        html {
+            scrollbar-gutter: stable;
+            overflow-y: scroll;
+        }
+    </style>
 </head>
 <body class="bg-slate-50 font-sans">
 
@@ -12,7 +18,7 @@
     <nav class="bg-slate-800 text-white shadow-md">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
-                <div class="text-xl font-bold tracking-wider">Supervisor</div>
+                <div class="text-xl font-bold tracking-wider">LKM Mitra Siswa Abadi</div>
                 <a href="{{ url('/supervisor/dashboard') }}" class="text-slate-300 hover:text-white font-medium text-sm transition">&larr; Kembali ke Dashboard</a>
             </div>
         </div>

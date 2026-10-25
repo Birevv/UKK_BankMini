@@ -286,4 +286,33 @@ class NasabahController extends Controller
 
         return response()->stream($callback, 200, $headers);
     }
+
+    /**
+     * Dashboard Portal Nasabah / Siswa
+     */
+    public function dashboardNasabah(Request $request)
+    {
+        $user = auth()->user();
+        $username = $user->username ?? '';
+        
+        $nasabah = DB::table('nasabah')
+            ->where('username', $username)
+            ->orWhere('nis', $username)
+            ->first();
+            
+        if (!$nasabah) {
+            $nasabah = DB::table('nasabah')->first();
+        }
+
+        $transaksi = [];
+        if ($nasabah) {
+            $transaksi = DB::table('transaksi')
+                ->where('nasabah_id', $nasabah->id)
+                ->orderBy('created_at', 'desc')
+                ->take(10)
+                ->get();
+        }
+
+        return view('nasabah.dashboard', compact('nasabah', 'transaksi'));
+    }
 }
