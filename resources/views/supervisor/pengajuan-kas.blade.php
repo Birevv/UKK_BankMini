@@ -51,7 +51,7 @@
                                 <p class="text-sm font-bold text-slate-800 truncate">{{ Auth::user()->nama_petugas }}</p>
                                 <span class="inline-block bg-slate-100 text-slate-800 text-xs px-2 py-0.5 rounded-full font-bold mt-1 uppercase">SUPERVISOR</span>
                             </div>
-                            <a href="{{ url('/supervisor/profil') }}" class="block px-4 py-2.5 text-sm hover:bg-slate-50 text-slate-700 flex items-center font-medium">
+                            <a href="{{ url('/supervisor/profil') }}" class="px-4 py-2.5 text-sm hover:bg-slate-50 text-slate-700 flex items-center font-medium">
                                 <svg class="w-4 h-4 mr-2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                                 Lihat & Edit Profil Saya
                             </a>
@@ -273,8 +273,9 @@
     </main>
 
     <!-- MODAL TOLAK PENGAJUAN KAS -->
-    <div id="modal-tolak" class="hidden fixed inset-0 bg-slate-900 bg-opacity-75 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden">
+    <div id="modal-tolak" class="hidden fixed inset-0 bg-slate-900 bg-opacity-75 z-50 p-4 backdrop-blur-sm overflow-y-auto">
+        <div class="min-h-full flex items-center justify-center">
+            <div class="bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden">
             <div class="bg-rose-700 text-white px-6 py-4 flex items-center justify-between">
                 <h3 class="text-base font-bold" id="m-tolak-title">Tolak Pengajuan Kas</h3>
                 <button type="button" onclick="closeModalTolak()" class="text-rose-200 hover:text-white text-xl font-bold">&times;</button>
@@ -301,11 +302,13 @@
                 </div>
             </form>
         </div>
+        </div>
     </div>
 
     <!-- MODAL ATUR KAS AWAL HARI INI -->
-    <div id="modal-kas-awal" class="hidden fixed inset-0 bg-slate-900 bg-opacity-75 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden">
+    <div id="modal-kas-awal" class="hidden fixed inset-0 bg-slate-900 bg-opacity-75 z-50 p-4 backdrop-blur-sm overflow-y-auto">
+        <div class="min-h-full flex items-center justify-center">
+            <div class="bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden">
             <div class="bg-slate-800 text-white px-6 py-4 flex items-center justify-between">
                 <h3 class="text-base font-bold">Tetapkan Kas Awal Operasional</h3>
                 <button type="button" onclick="closeModalKasAwal()" class="text-slate-400 hover:text-white text-xl font-bold">&times;</button>
@@ -334,6 +337,7 @@
                     </button>
                 </div>
             </form>
+        </div>
         </div>
     </div>
 

@@ -116,15 +116,15 @@
                                 </span>
                             </div>
                             @if($role === 'admin')
-                                <a href="{{ url('/admin/profil') }}" class="block px-4 py-2.5 text-sm hover:bg-slate-50 text-slate-700 flex items-center font-medium">
+                                <a href="{{ url('/admin/profil') }}" class="px-4 py-2.5 text-sm hover:bg-slate-50 text-slate-700 flex items-center font-medium">
                                     <svg class="w-4 h-4 mr-2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg> Lihat Profil
                                 </a>
                             @elseif($role === 'teller')
-                                <a href="{{ url('/teller/profil') }}" class="block px-4 py-2.5 text-sm hover:bg-slate-50 text-slate-700 flex items-center font-medium">
+                                <a href="{{ url('/teller/profil') }}" class="px-4 py-2.5 text-sm hover:bg-slate-50 text-slate-700 flex items-center font-medium">
                                     <svg class="w-4 h-4 mr-2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg> Lihat Profil
                                 </a>
                             @else
-                                <a href="{{ url('/supervisor/profil') }}" class="block px-4 py-2.5 text-sm hover:bg-slate-50 text-slate-700 flex items-center font-medium">
+                                <a href="{{ url('/supervisor/profil') }}" class="px-4 py-2.5 text-sm hover:bg-slate-50 text-slate-700 flex items-center font-medium">
                                     <svg class="w-4 h-4 mr-2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg> Lihat Profil
                                 </a>
                             @endif
@@ -386,8 +386,9 @@
     <!-- ========================================================================= -->
     <!-- MODAL POPUP: TAMBAH BARIS EXCEL AVALIS BARU -->
     <!-- ========================================================================= -->
-    <div id="modalTambah" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl shadow-2xl border border-slate-200 max-w-lg w-full overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+    <div id="modalTambah" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden p-4 overflow-y-auto">
+        <div class="min-h-full flex items-center justify-center">
+            <div class="bg-white rounded-xl shadow-2xl border border-slate-200 max-w-lg w-full overflow-hidden animate-in fade-in zoom-in-95 duration-150">
             <div class="bg-emerald-800 text-white px-5 py-3.5 flex justify-between items-center">
                 <div class="flex items-center space-x-2">
                     <span class="font-bold text-sm">Input Baris Absensi Avalis Baru</span>
@@ -461,13 +462,15 @@
                 </div>
             </form>
         </div>
+        </div>
     </div>
 
     <!-- ========================================================================= -->
     <!-- MODAL POPUP: EDIT BARIS EXCEL AVALIS -->
     <!-- ========================================================================= -->
-    <div id="modalEdit" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl shadow-2xl border border-slate-200 max-w-lg w-full overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+    <div id="modalEdit" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden p-4 overflow-y-auto">
+        <div class="min-h-full flex items-center justify-center">
+            <div class="bg-white rounded-xl shadow-2xl border border-slate-200 max-w-lg w-full overflow-hidden animate-in fade-in zoom-in-95 duration-150">
             <div class="bg-slate-800 text-white px-5 py-3.5 flex justify-between items-center">
                 <div class="flex items-center space-x-2">
                     <span class="font-bold text-sm">Perbarui Data Absensi Avalis</span>
@@ -540,6 +543,7 @@
                     </button>
                 </div>
             </form>
+        </div>
         </div>
     </div>
 

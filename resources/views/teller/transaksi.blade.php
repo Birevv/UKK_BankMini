@@ -132,10 +132,12 @@
                     <!-- Input Nominal (Font dikembalikan ke ukuran wajar) -->
                     <input type="number" name="nominal" id="nominal" min="1000" oninput="simpanDraft(); validasiSaldo();" onkeypress="cekEnter(event)" class="shadow-sm border border-slate-300 rounded w-full py-3 px-4 text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-xl font-bold bg-white" required placeholder="0">
 
-                    <p id="pesan-error" class="text-sm font-bold text-rose-600 mt-2 hidden flex items-center">
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                        <span id="teks-error">Peringatan Saldo</span>
-                    </p>
+                    <div id="pesan-error" class="hidden mt-2">
+                        <p class="text-sm font-bold text-rose-600 flex items-center">
+                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                            <span id="teks-error">Peringatan Saldo</span>
+                        </p>
+                    </div>
                     <p class="text-sm text-slate-500 mt-2 font-medium">✨ <strong>Tips Navigasi Cepat:</strong> Tekan <kbd class="bg-slate-200 px-2 py-0.5 rounded border border-slate-300 text-xs font-mono font-bold">F2</kbd> untuk isi nominal, <kbd class="bg-slate-200 px-2 py-0.5 rounded border border-slate-300 text-xs font-mono font-bold">Enter</kbd> untuk simpan, <kbd class="bg-slate-200 px-2 py-0.5 rounded border border-slate-300 text-xs font-mono font-bold">Esc</kbd> untuk batal.</p>
 
                     <!-- KALKULATOR PECAHAN (Dimunculkan kembali) -->
@@ -167,8 +169,9 @@
     </main>
 
     <!-- POP-UP KONFIRMASI (Sesuai usulan Teller) -->
-    <div id="modal-konfirmasi" class="hidden fixed inset-0 bg-slate-900 bg-opacity-75 z-50 flex items-center justify-center backdrop-blur-sm p-4">
-        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden transform transition-all">
+    <div id="modal-konfirmasi" class="hidden fixed inset-0 bg-slate-900 bg-opacity-75 z-50 backdrop-blur-sm p-4 overflow-y-auto">
+        <div class="min-h-full flex items-center justify-center">
+            <div class="bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden transform transition-all">
             <div class="bg-amber-400 px-6 py-4 border-b border-amber-500">
                 <h3 class="text-xl font-black text-slate-900 flex items-center">
                     <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
@@ -207,6 +210,7 @@
                     </button>
                 </div>
             </div>
+        </div>
         </div>
     </div>
 
