@@ -92,9 +92,35 @@
                     <input type="text" name="kelas" placeholder="Contoh: XII RPL 2" class="shadow-sm border border-slate-300 rounded w-full py-2.5 px-3 focus:ring-2 focus:ring-slate-500 focus:outline-none text-slate-700" required>
                 </div>
 
-                <div class="mb-8">
+                <div class="mb-5">
+                    <label class="block text-slate-700 text-sm font-bold mb-2">Kategori Nasabah</label>
+                    <select name="kategori" class="shadow-sm border border-slate-300 rounded w-full py-2.5 px-3 focus:ring-2 focus:ring-slate-500 focus:outline-none text-slate-700 bg-white" required>
+                        <option value="siswa">Siswa</option>
+                        <option value="guru_karyawan">Guru / Karyawan</option>
+                    </select>
+                </div>
+
+                <div class="mb-5">
                     <label class="block text-slate-700 text-sm font-bold mb-2">Jurusan</label>
-                    <input type="text" name="jurusan" placeholder="Contoh: Rekayasa Perangkat Lunak" class="shadow-sm border border-slate-300 rounded w-full py-2.5 px-3 focus:ring-2 focus:ring-slate-500 focus:outline-none text-slate-700" required>
+                    <select name="jurusan" class="shadow-sm border border-slate-300 rounded w-full py-2.5 px-3 focus:ring-2 focus:ring-slate-500 focus:outline-none text-slate-700 bg-white" required>
+                        <option value="Rekayasa Perangkat Lunak">Rekayasa Perangkat Lunak (Kode: RPL)</option>
+                        <option value="Teknik Komputer dan Jaringan">Teknik Komputer dan Jaringan (Kode: TKJ)</option>
+                        <option value="Akuntansi dan Keuangan Lembaga">Akuntansi dan Keuangan Lembaga (Kode: AK)</option>
+                        <option value="Bisnis Retail">Bisnis Retail (Kode: BR)</option>
+                        <option value="Bisnis Digital">Bisnis Digital (Kode: BD)</option>
+                        <option value="Manajemen Perkantoran">Manajemen Perkantoran (Kode: MP)</option>
+                        <option value="Desain Komunikasi Visual">Desain Komunikasi Visual (Kode: DKV)</option>
+                    </select>
+                </div>
+
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-3.5 mb-6 text-xs text-blue-900">
+                    <p class="font-bold flex items-center">
+                        <svg class="w-4 h-4 mr-1 text-blue-700" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
+                        Perumusan ID Rekening Otomatis (Armadillo Accounting):
+                    </p>
+                    <p class="mt-1 text-blue-800">
+                        Sistem akan meng-generate Nomor Rekening otomatis dengan format <strong>(Kode Jurusan - No Urut 3 Digit)</strong>, misalnya <code>RPL-001</code> atau <code>AK-005</code>.
+                    </p>
                 </div>
 
                 <div class="flex justify-end items-center space-x-4 border-t border-slate-200 pt-6">

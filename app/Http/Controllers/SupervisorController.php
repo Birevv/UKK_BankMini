@@ -20,7 +20,13 @@ class SupervisorController extends Controller
                         ->orderBy('transaksi.created_at', 'desc')
                         ->get();
 
-        return view('supervisor.dashboard', compact('totalNasabah', 'totalSaldo', 'transaksi'));
+        $today = Carbon::today()->toDateString();
+        $brankasHariIni = DB::table('brankas')->where('tanggal', $today)->first();
+        $kasTersedia = $brankasHariIni ? $brankasHariIni->total : 0;
+        $kasAwal = $brankasHariIni ? $brankasHariIni->saldo_awal : 0;
+        $pendingPengajuanKasCount = DB::table('pengajuan_kas')->where('status', 'pending')->count();
+
+        return view('supervisor.dashboard', compact('totalNasabah', 'totalSaldo', 'transaksi', 'kasTersedia', 'kasAwal', 'pendingPengajuanKasCount'));
     }
 
     public function laporan()

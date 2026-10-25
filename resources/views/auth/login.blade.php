@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - E-Teller Bank Mini</title>
+    <title>Login</title>
     <!-- Memanggil Tailwind CSS secara instan -->
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -11,8 +11,8 @@
 
     <div class="w-full max-w-md bg-white rounded-xl shadow-lg p-8 border border-slate-200">
         <div class="text-center mb-8">
-            <h2 class="text-3xl font-extrabold text-blue-600">E-Teller</h2>
-            <p class="text-slate-500 text-sm mt-1">Sistem Informasi Bank Mini Sekolah</p>
+            <h2 class="text-3xl font-extrabold text-blue-600">Login</h2>
+            <p class="text-slate-500 text-sm mt-1">Sistem Bank Mini Sekolah</p>
         </div>
 
         <!-- Area Notifikasi (Error/Success) -->
@@ -35,17 +35,17 @@
 
             <div class="mb-5">
                 <label for="username" class="block text-slate-700 text-sm font-bold mb-2">Username</label>
-                <input type="text" name="username" id="username" class="shadow-sm appearance-none border border-slate-300 rounded w-full py-2.5 px-3 text-slate-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" required placeholder="Masukkan username admin / pegawai" autocomplete="off">
+                <input type="text" name="username" id="username" class="shadow-sm appearance-none border border-slate-300 rounded w-full py-2.5 px-3 text-slate-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" required placeholder="Masukkan username" autocomplete="off">
             </div>
 
             <div class="mb-6">
-                <label for="password" class="block text-slate-700 text-sm font-bold mb-2">Password / PIN</label>
+                <label for="password" class="block text-slate-700 text-sm font-bold mb-2">Password</label>
                 <input type="password" name="password" id="password" class="shadow-sm appearance-none border border-slate-300 rounded w-full py-2.5 px-3 text-slate-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" required placeholder="••••••••">
             </div>
 
             <div class="flex items-center justify-between">
                 <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-4 rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-300 transition duration-300">
-                    Masuk ke Sistem
+                    Masuk
                 </button>
             </div>
         </form>

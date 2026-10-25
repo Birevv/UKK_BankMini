@@ -52,9 +52,9 @@
                 </div>
 
                 <div class="mb-4">
-                    <label class="block text-slate-700 text-sm font-bold mb-2">Jabatan / Role Sistem</label>
+                    <label class="block text-slate-700 text-sm font-bold mb-2">Jabatan</label>
                     <select name="role" class="shadow-sm border border-slate-300 rounded w-full py-2.5 px-3 focus:ring-2 focus:ring-slate-500 focus:outline-none" required>
-                        <option value="">-- Pilih Jabatan --</option>
+                        <option value="">Pilih Jabatan</option>
                         <option value="teller">Teller (Kasir)</option>
                         <option value="supervisor">Supervisor (Atasan)</option>
                         <option value="admin">Admin (Pengelola Sistem)</option>
@@ -62,7 +62,7 @@
                 </div>
 
                 <div class="mb-4">
-                    <label class="block text-slate-700 text-sm font-bold mb-2">Kelas / Jurusan <span class="text-xs font-normal text-slate-500">(Kosongkan jika Admin)</span></label>
+                    <label class="block text-slate-700 text-sm font-bold mb-2">Kelas <span class="text-xs font-normal text-slate-500">(Kosongkan jika Admin)</span></label>
                     <input type="text" name="kelas" placeholder="Contoh: XI RPL 1" class="shadow-sm border border-slate-300 rounded w-full py-2.5 px-3 focus:ring-2 focus:ring-slate-500 focus:outline-none">
                 </div>
 
@@ -74,7 +74,7 @@
                 <div class="flex justify-end items-center space-x-4 border-t border-slate-200 pt-6">
                     <a href="{{ url('/admin/dashboard') }}" class="text-slate-500 hover:text-slate-700 font-medium text-sm">Batal</a>
                     <button type="submit" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-2.5 px-6 rounded shadow transition">
-                        Simpan Petugas Baru
+                        Simpan
                     </button>
                 </div>
             </form>

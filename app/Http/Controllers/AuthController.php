@@ -18,17 +18,22 @@ class AuthController extends Controller
 
             $request->session()->regenerate();
 
-            $role = Auth::user()->role;
+            $role = strtolower(Auth::user()->role ?? '');
+            $userRoles = array_map('trim', explode(',', $role));
 
-            if ($role === 'admin') {
+            if (in_array('admin', $userRoles)) {
                 return redirect()->intended('/admin/dashboard');
-            } elseif ($role === 'teller') {
+            } elseif (in_array('teller', $userRoles)) {
                 return redirect()->intended('/teller/dashboard');
-            } elseif ($role === 'supervisor') {
+            } elseif (in_array('supervisor', $userRoles) || in_array('accounting', $userRoles)) {
                 return redirect()->intended('/supervisor/dashboard');
-            } elseif ($role === 'nasabah') {
+            } elseif (in_array('customer_service', $userRoles) || in_array('cs', $userRoles)) {
+                return redirect()->intended('/admin/data-nasabah');
+            } elseif (in_array('nasabah', $userRoles)) {
                 return redirect()->intended('/nasabah/dashboard');
             }
+
+            return redirect()->intended('/admin/dashboard');
         }
 
         return back()->with('error', 'Username atau Password salah!');

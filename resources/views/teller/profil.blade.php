@@ -8,11 +8,12 @@
 </head>
 <body class="bg-slate-50 font-sans">
 
-    <nav class="bg-emerald-600 text-white shadow-md">
+    <!-- NAVBAR TELLER KONSISTEN DENGAN ADMIN -->
+    <nav class="bg-slate-800 text-white shadow-md">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
-                <div class="text-xl font-bold tracking-wider">E-Teller | Profil Petugas</div>
-                <a href="{{ url('/teller/dashboard') }}" class="text-emerald-100 hover:text-white font-medium text-sm">&larr; Kembali ke Dashboard</a>
+                <div class="text-xl font-bold tracking-wider">LKM Mitra Siswa Abadi</div>
+                <a href="{{ url('/teller/dashboard') }}" class="text-slate-300 hover:text-white font-medium text-sm transition">&larr; Kembali ke Dashboard</a>
             </div>
         </div>
     </nav>
@@ -30,9 +31,9 @@
                 <!-- Foto Profil -->
                 <div class="relative">
                     @if($user->foto)
-                        <img src="{{ asset('storage/'.$user->foto) }}" alt="Foto Profil" class="w-24 h-24 rounded-full object-cover border-4 border-emerald-500 shadow-sm">
+                        <img src="{{ asset('storage/'.$user->foto) }}" alt="Foto Profil" class="w-24 h-24 rounded-full object-cover border-4 border-slate-600 shadow-sm">
                     @else
-                        <div class="w-24 h-24 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-3xl border-4 border-emerald-300 shadow-sm">
+                        <div class="w-24 h-24 rounded-full bg-slate-700 text-white flex items-center justify-center font-bold text-3xl border-4 border-slate-400 shadow-sm">
                             {{ strtoupper(substr($user->nama_petugas, 0, 1)) }}
                         </div>
                     @endif
@@ -40,7 +41,7 @@
                 <div>
                     <h1 class="text-2xl font-bold text-slate-800">{{ $user->nama_petugas }}</h1>
                     <p class="text-slate-500 text-sm mt-0.5">Username: <span class="font-mono text-slate-700">{{ $user->username }}</span></p>
-                    <span class="inline-block bg-emerald-100 text-emerald-800 text-xs px-3 py-1 rounded-full font-bold mt-2 uppercase">
+                    <span class="inline-block bg-slate-100 text-slate-800 text-xs px-3 py-1 rounded-full font-bold mt-2 uppercase border border-slate-200">
                         Role: {{ $user->role }}
                     </span>
                 </div>

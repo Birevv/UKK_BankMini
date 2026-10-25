@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Report (Tutup Kas Harian) - E-Teller</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 font-sans text-slate-800">
+
+    <!-- NAVBAR KONSISTEN DENGAN ADMIN (bg-slate-800) -->
+    <nav class="bg-slate-800 text-white shadow-md relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center space-x-3">
+                    <span class="text-xl font-bold tracking-wider">LKM Mitra Siswa Abadi</span>
+                    <span class="bg-emerald-600 text-white text-xs px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">Loket Teller</span>
+                </div>
+
+                <div class="flex items-center space-x-6">
+                    <a href="{{ url('/teller/dashboard') }}" class="text-slate-300 hover:text-white transition font-medium">Dashboard</a>
+                    <a href="{{ url('/teller/riwayat') }}" class="text-slate-300 hover:text-white transition font-medium">Riwayat Saya</a>
+                    <a href="{{ url('/teller/pengajuan-kas') }}" class="text-slate-300 hover:text-white transition font-medium flex items-center">
+                        <svg class="w-4 h-4 mr-1 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        Pengajuan Kas
+                    </a>
+                    <a href="{{ url('/teller/daily-report') }}" class="text-white font-bold underline decoration-2 underline-offset-4 flex items-center">
+                        <svg class="w-4 h-4 mr-1 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        Tutup Kas (Daily Report)
+                    </a>
+                    <a href="{{ url('/teller/absensi-avalis') }}" class="text-slate-300 hover:text-white transition font-medium">Absensi Avalis</a>
+
+                    <form action="{{ route('logout') }}" method="POST" class="inline">
+                        @csrf
+                        <button type="submit" class="text-rose-400 hover:text-rose-300 font-medium text-sm transition">Keluar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+        <!-- NOTIFIKASI -->
+        @if(session('success'))
+        <div class="bg-emerald-50 border-l-4 border-emerald-500 text-emerald-800 p-4 mb-6 rounded-r shadow-sm flex items-start justify-between">
+            <div class="flex items-center">
+                <svg class="w-6 h-6 mr-3 text-emerald-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <p class="font-medium text-sm">{{ session('success') }}</p>
+            </div>
+            <button onclick="this.parentElement.remove()" class="text-emerald-500 hover:text-emerald-700">&times;</button>
+        </div>
+        @endif
+
+        @if(session('error'))
+        <div class="bg-rose-50 border-l-4 border-rose-500 text-rose-800 p-4 mb-6 rounded-r shadow-sm flex items-start justify-between">
+            <div class="flex items-center">
+                <svg class="w-6 h-6 mr-3 text-rose-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <p class="font-medium text-sm">{{ session('error') }}</p>
+            </div>
+            <button onclick="this.parentElement.remove()" class="text-rose-500 hover:text-rose-700">&times;</button>
+        </div>
+        @endif
+
+        <!-- HEADER HALAMAN -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between pb-6 mb-6 border-b border-slate-200">
+            <div>
+                <h1 class="text-2xl font-black text-slate-800 tracking-tight flex items-center">
+                    <svg class="w-7 h-7 mr-2 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    Daily Report Closing (Tutup Kas Harian)
+                </h1>
+                <p class="text-slate-500 text-sm mt-1">
+                    Rekonsiliasi antara catatan kas komputer dan kas fisik di laci loket teller tanggal 
+                    <span class="font-bold text-slate-700">{{ \Carbon\Carbon::today()->translatedFormat('l, d F Y') }}</span>.
+                </p>
+            </div>
+            <div class="mt-4 md:mt-0 flex items-center space-x-3">
+                <div class="bg-white border border-slate-200 rounded-lg px-4 py-2 text-right shadow-sm">
+                    <p class="text-xs text-slate-400 font-bold uppercase">Petugas Teller</p>
+                    <p class="text-sm font-black text-slate-800">{{ Auth::user()->nama_petugas }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4 KARTU METRIK SALDO SISTEM -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                <div class="flex items-center justify-between">
+                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Saldo Awal Laci</p>
+                    <span class="p-2 bg-slate-100 text-slate-600 rounded-lg">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"/></svg>
+                    </span>
+                </div>
+                <p class="text-2xl font-black text-slate-800 mt-2">Rp {{ number_format($openingBalance, 0, ',', '.') }}</p>
+                <p class="text-xs text-slate-400 mt-1">Kas operasional awal hari</p>
+            </div>
+
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                <div class="flex items-center justify-between">
+                    <p class="text-xs font-bold text-emerald-600 uppercase tracking-wider">Total Setoran (+)</p>
+                    <span class="p-2 bg-emerald-50 text-emerald-600 rounded-lg">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"/></svg>
+                    </span>
+                </div>
+                <p class="text-2xl font-black text-emerald-600 mt-2">Rp {{ number_format($totalDeposit, 0, ',', '.') }}</p>
+                <p class="text-xs text-slate-400 mt-1">Uang tunai masuk ke loket</p>
+            </div>
+
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                <div class="flex items-center justify-between">
+                    <p class="text-xs font-bold text-rose-600 uppercase tracking-wider">Total Penarikan (-)</p>
+                    <span class="p-2 bg-rose-50 text-rose-600 rounded-lg">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 13l-5 5m0 0l-5-5m5 5V6"/></svg>
+                    </span>
+                </div>
+                <p class="text-2xl font-black text-rose-600 mt-2">Rp {{ number_format($totalWithdrawal, 0, ',', '.') }}</p>
+                <p class="text-xs text-slate-400 mt-1">Uang tunai keluar ke nasabah</p>
+            </div>
+
+            <div class="bg-blue-900 text-white p-5 rounded-xl shadow-md border border-blue-800">
+                <div class="flex items-center justify-between">
+                    <p class="text-xs font-bold text-blue-200 uppercase tracking-wider">Saldo Komputer (Sistem)</p>
+                    <span class="p-2 bg-blue-800 text-blue-200 rounded-lg">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                    </span>
+                </div>
+                <p class="text-2xl font-black text-white mt-2" id="val-system-balance" data-val="{{ $systemBalance }}">Rp {{ number_format($systemBalance, 0, ',', '.') }}</p>
+                <p class="text-xs text-blue-300 mt-1">Wajib sama dengan kas fisik di laci</p>
+            </div>
+        </div>
+
+        <!-- FORM REKONSILIASI KAS FISIK & PERHITUNGAN LEMBARAN -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
+            <!-- KALKULATOR LEMBARAN KAS FISIK -->
+            <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                <div class="flex items-center justify-between pb-4 mb-4 border-b border-slate-200">
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-800 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                            Perhitungan Lembaran Uang Fisik di Laci
+                        </h2>
+                        <p class="text-xs text-slate-500">Hitung jumlah lembar tiap pecahan untuk memastikan uang fisik akurat.</p>
+                    </div>
+                    <button type="button" onclick="resetLembaran()" class="text-xs text-slate-500 hover:text-rose-600 underline">Reset Hitungan</button>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+                    @php
+                        $pecahanList = [
+                            ['label' => 'Rp 100.000', 'val' => 100000, 'bg' => 'bg-red-50 border-red-200 text-red-800'],
+                            ['label' => 'Rp 50.000',  'val' => 50000,  'bg' => 'bg-blue-50 border-blue-200 text-blue-800'],
+                            ['label' => 'Rp 20.000',  'val' => 20000,  'bg' => 'bg-emerald-50 border-emerald-200 text-emerald-800'],
+                            ['label' => 'Rp 10.000',  'val' => 10000,  'bg' => 'bg-purple-50 border-purple-200 text-purple-800'],
+                            ['label' => 'Rp 5.000',   'val' => 5000,   'bg' => 'bg-amber-50 border-amber-200 text-amber-800'],
+                            ['label' => 'Rp 2.000',   'val' => 2000,   'bg' => 'bg-slate-100 border-slate-300 text-slate-800'],
+                            ['label' => 'Rp 1.000',   'val' => 1000,   'bg' => 'bg-yellow-50 border-yellow-200 text-yellow-800'],
+                            ['label' => 'Koin / Logam','val' => 1,     'bg' => 'bg-slate-50 border-slate-200 text-slate-700', 'isCoin' => true],
+                        ];
+                    @endphp
+
+                    @foreach($pecahanList as $p)
+                    <div class="p-3 rounded-lg border {{ $p['bg'] }} flex items-center justify-between">
+                        <div class="w-32">
+                            <p class="font-bold text-sm">{{ $p['label'] }}</p>
+                            <span class="text-[10px] text-slate-500 subtotal-text" id="subtotal-{{ $p['val'] }}">Rp 0</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <input type="number" min="0" placeholder="0"
+                                   class="input-lembar w-24 text-right font-bold text-sm bg-white border border-slate-300 rounded-md px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                                   data-nominal="{{ $p['val'] }}"
+                                   data-coin="{{ isset($p['isCoin']) ? 'true' : 'false' }}"
+                                   oninput="hitungTotalKasFisik()">
+                            <span class="text-xs text-slate-500 font-medium">{{ isset($p['isCoin']) ? 'Rp' : 'Lbr' }}</span>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+
+                <div class="bg-slate-100 rounded-lg p-4 flex flex-col sm:flex-row sm:items-center justify-between border border-slate-200">
+                    <span class="text-sm font-bold text-slate-700">Akumulasi Total Uang Fisik:</span>
+                    <span class="text-2xl font-black text-slate-900" id="display-total-fisik">Rp 0</span>
+                </div>
+            </div>
+
+            <!-- FORM SUBMIT DAILY REPORT -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col justify-between">
+                <div>
+                    <h2 class="text-lg font-bold text-slate-800 pb-3 mb-4 border-b border-slate-200 flex items-center">
+                        <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                        Otorisasi Tutup Kas
+                    </h2>
+
+                    @if($myReportToday)
+                    <div class="mb-4 p-4 rounded-lg {{ $myReportToday->status === 'approved' ? 'bg-emerald-50 border border-emerald-200 text-emerald-800' : ($myReportToday->status === 'hold' ? 'bg-amber-50 border border-amber-200 text-amber-800' : 'bg-blue-50 border border-blue-200 text-blue-800') }}">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="text-xs font-bold uppercase tracking-wider">Status Laporan Hari Ini:</span>
+                            @if($myReportToday->status === 'approved')
+                                <span class="bg-emerald-600 text-white text-xs px-2 py-0.5 rounded font-bold">APPROVED</span>
+                            @elseif($myReportToday->status === 'hold')
+                                <span class="bg-amber-500 text-white text-xs px-2 py-0.5 rounded font-bold">HOLD (PENDING)</span>
+                            @else
+                                <span class="bg-blue-600 text-white text-xs px-2 py-0.5 rounded font-bold">MENUNGGU APPROVAL</span>
+                            @endif
+                        </div>
+                        <p class="text-xs mt-1">Telah disubmit dengan kas fisik: <strong>Rp {{ number_format($myReportToday->physical_balance, 0, ',', '.') }}</strong></p>
+                        @if($myReportToday->status === 'approved')
+                            <p class="text-xs mt-2 text-emerald-700 font-medium">Laporan sudah disetujui Supervisor. Silakan cetak lembar bukti penutupan kas.</p>
+                            <a href="{{ url('/daily-report/cetak/'.$myReportToday->id) }}" target="_blank" class="mt-3 inline-flex items-center text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded transition">
+                                <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                                Cetak Daily Report #{{ $myReportToday->id }}
+                            </a>
+                        @endif
+                    </div>
+                    @endif
+
+                    <form action="{{ url('/teller/daily-report/simpan') }}" method="POST" id="form-daily-report">
+                        @csrf
+                        <div class="mb-4">
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                                Saldo Kas Fisik (Rp) *
+                            </label>
+                            <input type="number" name="physical_balance" id="physical_balance" min="0" required
+                                   value="{{ old('physical_balance', $myReportToday->physical_balance ?? 0) }}"
+                                   oninput="updateDifferenceManual()"
+                                   class="w-full font-black text-xl text-slate-800 border border-slate-300 rounded-lg px-3 py-2.5 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-600">
+                            <p class="text-[11px] text-slate-400 mt-1">Dapat diisi manual atau dari kalkulator lembaran di samping.</p>
+                        </div>
+
+                        <!-- KOTAK INDIKATOR SELISIH KAS -->
+                        <div id="diff-card" class="mb-4 p-3.5 rounded-lg border bg-slate-50 border-slate-200">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-bold text-slate-600 uppercase">Status Rekonsiliasi:</span>
+                                <span id="diff-status" class="text-xs font-bold px-2 py-0.5 rounded bg-slate-200 text-slate-700">Belum Dihitung</span>
+                            </div>
+                            <div class="flex items-center justify-between mt-2 pt-2 border-t border-slate-200">
+                                <span class="text-xs text-slate-500">Selisih (Fisik - Sistem):</span>
+                                <span id="diff-amount" class="text-base font-black text-slate-800">Rp 0</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-5">
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                                Catatan / Keterangan Teller
+                            </label>
+                            <textarea name="notes" rows="2" placeholder="Tuliskan keterangan jika ada kelebihan/kekurangan kas fisik atau hal khusus lainnya..."
+                                      class="w-full text-xs text-slate-800 border border-slate-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-blue-600">{{ old('notes', $myReportToday->notes ?? '') }}</textarea>
+                        </div>
+
+                        <button type="submit" id="btn-submit-report"
+                                {{ ($myReportToday && $myReportToday->status === 'approved') ? 'disabled' : '' }}
+                                class="w-full bg-blue-800 hover:bg-blue-900 disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-black py-3 px-4 rounded-lg shadow transition flex items-center justify-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg>
+                            {{ $myReportToday ? 'Perbarui Laporan Tutup Kas' : 'Kirim Tutup Kas ke Supervisor' }}
+                        </button>
+                    </form>
+                </div>
+
+                <div class="mt-4 pt-4 border-t border-slate-100 text-[11px] text-slate-400">
+                    <p>🔒 <strong>SOP Perbankan:</strong> Setelah disetujui Supervisor, data kas harian akan dibekukan dan tercatat permanen pada Jurnal Akuntansi.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TABEL RINCIAN TRANSAKSI HARI INI -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 mb-10 overflow-hidden">
+            <div class="p-5 border-b border-slate-200 flex items-center justify-between">
+                <div>
+                    <h2 class="text-lg font-bold text-slate-800">Rincian Transaksi Loket Saya Hari Ini</h2>
+                    <p class="text-xs text-slate-500">Daftar transaksi yang Anda proses pada tanggal {{ \Carbon\Carbon::today()->format('d/m/Y') }}.</p>
+                </div>
+                <span class="bg-slate-100 text-slate-700 text-xs font-bold px-3 py-1 rounded-full">
+                    {{ count($trxHariIni) }} Transaksi
+                </span>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs border-collapse">
+                    <thead class="bg-slate-100 text-slate-700 uppercase font-bold text-[11px] border-b border-slate-200">
+                        <tr>
+                            <th class="p-3">Waktu</th>
+                            <th class="p-3">ID Trx</th>
+                            <th class="p-3">Jenis Transaksi</th>
+                            <th class="p-3">Sandi</th>
+                            <th class="p-3 text-right">Nominal (Rp)</th>
+                            <th class="p-3">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 text-slate-700">
+                        @forelse($trxHariIni as $t)
+                        <tr class="hover:bg-slate-50">
+                            <td class="p-3 text-slate-500 font-mono">{{ date('H:i:s', strtotime($t->created_at)) }}</td>
+                            <td class="p-3 font-mono font-bold text-blue-900">#TRX-{{ str_pad($t->id, 5, '0', STR_PAD_LEFT) }}</td>
+                            <td class="p-3 font-bold uppercase">
+                                @if(in_array($t->jenis_transaksi, ['setor', 'koreksi_tarik']))
+                                    <span class="text-emerald-600">▲ {{ $t->jenis_transaksi }}</span>
+                                @else
+                                    <span class="text-rose-600">▼ {{ $t->jenis_transaksi }}</span>
+                                @endif
+                            </td>
+                            <td class="p-3 font-mono font-bold">{{ $t->kode_sandi ?? '-' }}</td>
+                            <td class="p-3 text-right font-black {{ in_array($t->jenis_transaksi, ['setor', 'koreksi_tarik']) ? 'text-emerald-700' : 'text-rose-700' }}">
+                                Rp {{ number_format($t->nominal, 0, ',', '.') }}
+                            </td>
+                            <td class="p-3">
+                                @if($t->status === 'sukses')
+                                    <span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded">Sukses</span>
+                                @elseif($t->status === 'pending')
+                                    <span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded">Pending SPV</span>
+                                @else
+                                    <span class="bg-rose-100 text-rose-800 text-[10px] font-bold px-2 py-0.5 rounded">{{ $t->status }}</span>
+                                @endif
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="6" class="p-6 text-center text-slate-400">Belum ada transaksi yang diproses di loket Anda hari ini.</td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- RIWAYAT DAILY REPORT SAYA -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="p-5 border-b border-slate-200">
+                <h2 class="text-lg font-bold text-slate-800">Riwayat Daily Report Saya</h2>
+                <p class="text-xs text-slate-500">Arsip laporan tutup kas harian yang pernah Anda kirimkan.</p>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs border-collapse">
+                    <thead class="bg-slate-100 text-slate-700 uppercase font-bold text-[11px] border-b border-slate-200">
+                        <tr>
+                            <th class="p-3">Tanggal Laporan</th>
+                            <th class="p-3 text-right">Saldo Awal</th>
+                            <th class="p-3 text-right">Total Setor</th>
+                            <th class="p-3 text-right">Total Tarik</th>
+                            <th class="p-3 text-right">Saldo Sistem</th>
+                            <th class="p-3 text-right">Kas Fisik</th>
+                            <th class="p-3 text-right">Selisih</th>
+                            <th class="p-3 text-center">Status</th>
+                            <th class="p-3 text-center">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 text-slate-700">
+                        @forelse($myReports as $rep)
+                        <tr class="hover:bg-slate-50">
+                            <td class="p-3 font-bold text-slate-900">{{ date('d/m/Y', strtotime($rep->report_date)) }}</td>
+                            <td class="p-3 text-right">Rp {{ number_format($rep->opening_balance, 0, ',', '.') }}</td>
+                            <td class="p-3 text-right text-emerald-600 font-bold">Rp {{ number_format($rep->total_deposit, 0, ',', '.') }}</td>
+                            <td class="p-3 text-right text-rose-600 font-bold">Rp {{ number_format($rep->total_withdrawal, 0, ',', '.') }}</td>
+                            <td class="p-3 text-right font-bold text-blue-900">Rp {{ number_format($rep->system_balance, 0, ',', '.') }}</td>
+                            <td class="p-3 text-right font-bold">Rp {{ number_format($rep->physical_balance, 0, ',', '.') }}</td>
+                            <td class="p-3 text-right font-black {{ $rep->difference == 0 ? 'text-emerald-600' : ($rep->difference > 0 ? 'text-blue-600' : 'text-rose-600') }}">
+                                Rp {{ number_format($rep->difference, 0, ',', '.') }}
+                            </td>
+                            <td class="p-3 text-center">
+                                @if($rep->status === 'approved')
+                                    <span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded">APPROVED</span>
+                                @elseif($rep->status === 'hold')
+                                    <span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded">HOLD</span>
+                                @else
+                                    <span class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded">PENDING</span>
+                                @endif
+                            </td>
+                            <td class="p-3 text-center">
+                                <a href="{{ url('/daily-report/cetak/'.$rep->id) }}" target="_blank"
+                                   class="inline-flex items-center text-xs font-bold text-blue-700 hover:text-blue-900 bg-blue-50 hover:bg-blue-100 px-2.5 py-1 rounded border border-blue-200 transition">
+                                    <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                                    Cetak
+                                </a>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="9" class="p-6 text-center text-slate-400">Belum ada riwayat daily report yang tercatat.</td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const systemBalance = {{ $systemBalance }};
+
+        function hitungTotalKasFisik() {
+            let total = 0;
+            const inputs = document.querySelectorAll('.input-lembar');
+
+            inputs.forEach(input => {
+                const nominal = parseInt(input.getAttribute('data-nominal'));
+                const isCoin = input.getAttribute('data-coin') === 'true';
+                const count = parseInt(input.value) || 0;
+
+                let subtotal = isCoin ? count : (nominal * count);
+                total += subtotal;
+
+                const subLabel = document.getElementById('subtotal-' + nominal);
+                if (subLabel) {
+                    subLabel.innerText = 'Rp ' + new Intl.NumberFormat('id-ID').format(subtotal);
+                }
+            });
+
+            document.getElementById('display-total-fisik').innerText = 'Rp ' + new Intl.NumberFormat('id-ID').format(total);
+            document.getElementById('physical_balance').value = total;
+
+            evaluasiSelisih(total);
+        }
+
+        function updateDifferenceManual() {
+            const fisik = parseInt(document.getElementById('physical_balance').value) || 0;
+            evaluasiSelisih(fisik);
+        }
+
+        function evaluasiSelisih(fisik) {
+            const diff = fisik - systemBalance;
+            const diffStatus = document.getElementById('diff-status');
+            const diffAmount = document.getElementById('diff-amount');
+            const diffCard = document.getElementById('diff-card');
+
+            diffAmount.innerText = (diff >= 0 ? '+ ' : '- ') + 'Rp ' + new Intl.NumberFormat('id-ID').format(Math.abs(diff));
+
+            if (diff === 0) {
+                diffStatus.className = 'text-xs font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800';
+                diffStatus.innerText = 'SEIMBANG (Rp 0)';
+                diffCard.className = 'mb-4 p-3.5 rounded-lg border bg-emerald-50 border-emerald-200';
+            } else if (diff > 0) {
+                diffStatus.className = 'text-xs font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-800';
+                diffStatus.innerText = 'LEBIH FISIK (SURPLUS)';
+                diffCard.className = 'mb-4 p-3.5 rounded-lg border bg-blue-50 border-blue-200';
+            } else {
+                diffStatus.className = 'text-xs font-bold px-2 py-0.5 rounded bg-rose-100 text-rose-800';
+                diffStatus.innerText = 'KURANG FISIK (DEFISIT)';
+                diffCard.className = 'mb-4 p-3.5 rounded-lg border bg-rose-50 border-rose-200';
+            }
+        }
+
+        function resetLembaran() {
+            document.querySelectorAll('.input-lembar').forEach(i => i.value = '');
+            document.querySelectorAll('.subtotal-text').forEach(s => s.innerText = 'Rp 0');
+            hitungTotalKasFisik();
+        }
+
+        // Jalankan evaluasi awal saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', function() {
+            const initialFisik = parseInt(document.getElementById('physical_balance').value) || 0;
+            evaluasiSelisih(initialFisik);
+        });
+    </script>
+</body>
+</html>

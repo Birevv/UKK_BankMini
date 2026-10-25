@@ -9,17 +9,70 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RoleGuard
 {
-    public function handle(Request $request, Closure $next, string $role): Response
+    /**
+     * Handle an incoming request with Multi-Role and Segregation of Duties (SoD) support.
+     */
+    public function handle(Request $request, Closure $next, ...$roles): Response
     {
         if (!Auth::check()) {
             return redirect('/login');
         }
 
-        if (Auth::user()->role !== $role) {
+        $user = Auth::user();
+        $userRoleString = strtolower($user->role ?? '');
+        $userRoles = array_map('trim', explode(',', $userRoleString));
 
-            Auth::logout();
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
+        // 1. Super Admin memiliki akses penuh ke seluruh modul
+        if (in_array('admin', $userRoles)) {
+            return $next($request);
+        }
+
+        // 2. Prinsip Segregation of Duties (SoD) Perbankan:
+        // Petugas Teller yang memegang uang fisik DILARANG merangkap Accounting / Supervisor
+        if (in_array('teller', $userRoles) && (in_array('accounting', $userRoles) || in_array('supervisor', $userRoles))) {
+            return redirect('/teller/dashboard')->with('error', 'Pelanggaran Aturan SoD Perbankan: Akun Teller dilarang merangkap wewenang Accounting / Otorisasi Kas!');
+        }
+
+        // 3. Normalisasi Role Target
+        $normalizedTargets = [];
+        foreach ($roles as $r) {
+            foreach (explode(',', strtolower($r)) as $subRole) {
+                $subRole = trim($subRole);
+                $normalizedTargets[] = $subRole;
+
+                // Alias kesetaraan role
+                if ($subRole === 'supervisor') $normalizedTargets[] = 'accounting';
+                if ($subRole === 'accounting') $normalizedTargets[] = 'supervisor';
+                if ($subRole === 'customer_service') $normalizedTargets[] = 'cs';
+                if ($subRole === 'cs') $normalizedTargets[] = 'customer_service';
+            }
+        }
+
+        // Cek kesesuaian role
+        $hasAccess = false;
+        foreach ($userRoles as $uRole) {
+            // Evaluasi alias user
+            $checkList = [$uRole];
+            if ($uRole === 'accounting') $checkList[] = 'supervisor';
+            if ($uRole === 'supervisor') $checkList[] = 'accounting';
+            if ($uRole === 'cs') $checkList[] = 'customer_service';
+            if ($uRole === 'customer_service') $checkList[] = 'cs';
+
+            if (array_intersect($checkList, $normalizedTargets)) {
+                $hasAccess = true;
+                break;
+            }
+        }
+
+        if (!$hasAccess) {
+            // Arahkan ke dashboard yang sesuai peran tanpa logout paksa
+            if (in_array('teller', $userRoles)) {
+                return redirect('/teller/dashboard')->with('error', 'Akses ditolak: Menu ini di luar wewenang tugas Teller.');
+            } elseif (in_array('accounting', $userRoles) || in_array('supervisor', $userRoles)) {
+                return redirect('/supervisor/dashboard')->with('error', 'Akses ditolak: Menu ini di luar wewenang Accounting / Supervisor.');
+            } elseif (in_array('customer_service', $userRoles) || in_array('cs', $userRoles)) {
+                return redirect('/admin/data-nasabah')->with('error', 'Akses terbatas untuk Customer Service.');
+            }
 
             return redirect('/login')->with('error', 'Akses Ilegal! Anda tidak memiliki wewenang untuk membuka halaman tersebut.');
         }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class TellerController extends Controller
 {
@@ -52,7 +53,13 @@ class TellerController extends Controller
             return sprintf('%02d-%02d-%02d-%s', $grade, $jurusan, $sub, $item->nis);
         })->values();
 
-        return view('teller.dashboard', compact('nasabah'));
+        $today = Carbon::today()->toDateString();
+        $brankasHariIni = DB::table('brankas')->where('tanggal', $today)->first();
+        $kasTersedia = $brankasHariIni ? $brankasHariIni->total : 0;
+        $kasAwal = $brankasHariIni ? $brankasHariIni->saldo_awal : 0;
+        $pendingPengajuan = DB::table('pengajuan_kas')->where('user_id', Auth::id())->where('status', 'pending')->count();
+
+        return view('teller.dashboard', compact('nasabah', 'kasTersedia', 'kasAwal', 'pendingPengajuan'));
     }
 
     public function cariByNis($nis)
@@ -70,29 +77,63 @@ class TellerController extends Controller
         if (!$nasabah) {
             return redirect('/teller/dashboard')->with('error', 'Data nasabah tidak ditemukan!');
         }
-        return view('teller.transaksi', compact('nasabah'));
+
+        $today = Carbon::today()->toDateString();
+        $brankasHariIni = DB::table('brankas')->where('tanggal', $today)->first();
+        $kasTersedia = $brankasHariIni ? $brankasHariIni->total : 0;
+        $kasAwal = $brankasHariIni ? $brankasHariIni->saldo_awal : 0;
+
+        return view('teller.transaksi', compact('nasabah', 'kasTersedia', 'kasAwal'));
     }
 
     public function prosesTransaksi(Request $request)
     {
         $request->validate([
             'nasabah_id' => 'required',
-            'jenis_transaksi' => 'required|in:setor,tarik,admin',
+            'jenis_transaksi' => 'required|in:setor,tarik,admin,koreksi_setor,koreksi_tarik',
             'nominal' => 'required|numeric|min:1000',
+            'idempotency_key' => 'nullable|string|max:64',
+            'alasan_koreksi' => 'nullable|string|max:255',
         ]);
+
+        // 1. Mitigasi Teknis: Cek Idempotency Key (Mencegah double-submit jika koneksi terputus)
+        if ($request->filled('idempotency_key')) {
+            $existing = DB::table('transaksi')->where('idempotency_key', $request->idempotency_key)->first();
+            if ($existing) {
+                return redirect('/teller/dashboard')->with('success', 'Transaksi telah berhasil diproses sebelumnya (Proteksi Idempotency Aktif). Dana tidak dipotong ganda.');
+            }
+        }
 
         $nasabah_id = $request->nasabah_id;
         $jenis = $request->jenis_transaksi;
         $nominal = $request->nominal;
         $petugas_id = Auth::id();
 
+        // 2. Kode Sandi Transaksi Standar Perbankan
+        $kode_sandi = match($jenis) {
+            'setor' => '101',
+            'tarik' => '201',
+            'koreksi_setor' => '102',
+            'koreksi_tarik' => '202',
+            'admin' => '301',
+            default => '100'
+        };
+
         DB::beginTransaction();
         try {
             $nasabah = DB::table('nasabah')->where('id', $nasabah_id)->lockForUpdate()->first();
+            if (!$nasabah) {
+                return back()->with('error', 'Data nasabah tidak ditemukan.');
+            }
 
-            // Aturan Saldo Mengendap Rp 10.000
+            // Aturan Saldo Mengendap Minimal Rp 10.000 untuk Penarikan
             if ($jenis == 'tarik' && ($nasabah->saldo - $nominal) < 10000) {
                 return back()->with('error', 'Gagal! Penarikan ditolak karena melanggar aturan saldo mengendap minimal Rp 10.000.');
+            }
+
+            // Aturan Saldo Cukup untuk Koreksi Setoran (Pembatalan Uang Palsu/Robek)
+            if ($jenis == 'koreksi_setor' && $nasabah->saldo < $nominal) {
+                return back()->with('error', 'Gagal! Saldo nasabah tidak mencukupi untuk dilakukan koreksi setoran.');
             }
 
             // Aturan Potongan Admin
@@ -100,32 +141,70 @@ class TellerController extends Controller
                 return back()->with('error', 'Gagal! Saldo nasabah tidak cukup untuk dipotong biaya administrasi.');
             }
 
+            // 3. PROTEKSI KAS MINUS PERBANKAN: JANGAN SAMPAI KAS FISIK DI LOKET/BRANKAS MINUS!
+            // Cek ketersediaan uang tunai riil di laci kas loket hari ini
+            $brankasHariIni = DB::table('brankas')->where('tanggal', now()->toDateString())->lockForUpdate()->first();
+            $kasTersedia = $brankasHariIni ? $brankasHariIni->total : 0;
+
+            if (in_array($jenis, ['tarik', 'koreksi_setor']) && $nominal > $kasTersedia) {
+                DB::rollback();
+                $formattedKas = number_format($kasTersedia, 0, ',', '.');
+                $formattedNom = number_format($nominal, 0, ',', '.');
+                return back()
+                    ->with('error', "PENARIKAN DITOLAK: Uang kas fisik di loket tidak mencukupi! Sisa kas tersedia saat ini hanya Rp {$formattedKas} (Dibutuhkan: Rp {$formattedNom}). Kas dilarang minus! Silakan buat Pengajuan Kas ke Supervisor.")
+                    ->with('kas_habis', true)
+                    ->with('kas_tersedia', $kasTersedia);
+            }
+
             $transaksi_id = DB::table('transaksi')->insertGetId([
-                'nasabah_id' => $nasabah_id, 'petugas_id' => $petugas_id,
-                'jenis_transaksi' => $jenis, 'nominal' => $nominal,
-                'status' => 'pending', 'created_at' => now(), 'updated_at' => now(),
+                'nasabah_id' => $nasabah_id,
+                'petugas_id' => $petugas_id,
+                'jenis_transaksi' => $jenis,
+                'kode_sandi' => $kode_sandi,
+                'nominal' => $nominal,
+                'status' => 'pending',
+                'idempotency_key' => $request->idempotency_key,
+                'alasan_batal' => $request->alasan_koreksi,
+                'created_at' => now(),
+                'updated_at' => now(),
             ]);
 
-            $saldo_baru = ($jenis == 'setor') ? $nasabah->saldo + $nominal : $nasabah->saldo - $nominal;
+            // Hitung Saldo Baru
+            if ($jenis == 'setor' || $jenis == 'koreksi_tarik') {
+                $saldo_baru = $nasabah->saldo + $nominal;
+            } else {
+                $saldo_baru = $nasabah->saldo - $nominal;
+            }
             DB::table('nasabah')->where('id', $nasabah_id)->update(['saldo' => $saldo_baru]);
 
+            // Pembukuan Jurnal Akuntansi
             $ket = match($jenis) {
-                'setor' => 'Setoran Tunai dari ' . $nasabah->nama_siswa,
-                'tarik' => 'Penarikan Tunai oleh ' . $nasabah->nama_siswa,
-                'admin' => 'Biaya Administrasi buku dari ' . $nasabah->nama_siswa,
+                'setor' => 'Setoran Tunai [101] - ' . $nasabah->nama_siswa,
+                'tarik' => 'Penarikan Tunai [201] - ' . $nasabah->nama_siswa,
+                'koreksi_setor' => 'KOREKSI SETOR [102] (' . ($request->alasan_koreksi ?? 'Uang palsu/robek') . ') - ' . $nasabah->nama_siswa,
+                'koreksi_tarik' => 'KOREKSI TARIK [202] (' . ($request->alasan_koreksi ?? 'Pembatalan salah tarik') . ') - ' . $nasabah->nama_siswa,
+                'admin' => 'Biaya Administrasi Buku [301] - ' . $nasabah->nama_siswa,
             };
 
+            $isDebit = in_array($jenis, ['setor', 'koreksi_tarik']);
             DB::table('jurnal')->insert([
-                'transaksi_id' => $transaksi_id, 'keterangan' => $ket,
-                'debit' => ($jenis == 'setor') ? $nominal : 0, 'kredit' => ($jenis != 'setor') ? $nominal : 0,
-                'tanggal' => now()->toDateString(), 'created_at' => now(), 'updated_at' => now(),
+                'transaksi_id' => $transaksi_id,
+                'keterangan' => $ket,
+                'debit' => $isDebit ? $nominal : 0,
+                'kredit' => !$isDebit ? $nominal : 0,
+                'tanggal' => now()->toDateString(),
+                'created_at' => now(),
+                'updated_at' => now(),
             ]);
 
+            // Mutasi Kas Brankas Fisik
             $brankasHariIni = DB::table('brankas')->where('tanggal', now()->toDateString())->first();
+            $nominalMasuk = in_array($jenis, ['setor', 'koreksi_tarik']) ? $nominal : 0;
+            $nominalKeluar = in_array($jenis, ['tarik', 'admin', 'koreksi_setor']) ? $nominal : 0;
 
             if ($brankasHariIni) {
-                $masuk = ($jenis == 'setor') ? $brankasHariIni->masuk + $nominal : $brankasHariIni->masuk;
-                $keluar = ($jenis == 'tarik') ? $brankasHariIni->keluar + $nominal : $brankasHariIni->keluar;
+                $masuk = $brankasHariIni->masuk + $nominalMasuk;
+                $keluar = $brankasHariIni->keluar + $nominalKeluar;
                 $total = $brankasHariIni->saldo_awal + $masuk - $keluar;
 
                 DB::table('brankas')->where('id', $brankasHariIni->id)->update([
@@ -134,19 +213,37 @@ class TellerController extends Controller
             } else {
                 $kemarin = DB::table('brankas')->orderBy('tanggal', 'desc')->first();
                 $saldo_awal = $kemarin ? $kemarin->total : 0;
-                $masuk = ($jenis == 'setor') ? $nominal : 0;
-                $keluar = ($jenis == 'tarik') ? $nominal : 0;
-                $total = $saldo_awal + $masuk - $keluar;
+                $total = $saldo_awal + $nominalMasuk - $nominalKeluar;
 
                 DB::table('brankas')->insert([
-                    'tanggal' => now()->toDateString(), 'saldo_awal' => $saldo_awal,
-                    'masuk' => $masuk, 'keluar' => $keluar, 'total' => $total,
-                    'created_at' => now(), 'updated_at' => now(),
+                    'tanggal' => now()->toDateString(),
+                    'saldo_awal' => $saldo_awal,
+                    'masuk' => $nominalMasuk,
+                    'keluar' => $nominalKeluar,
+                    'total' => $total,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
             DB::commit();
-            return redirect('/teller/dashboard')->with('success', 'Transaksi berhasil diproses! Menunggu persetujuan Supervisor.');
+
+            $slipUrl = in_array($jenis, ['setor', 'koreksi_tarik'])
+                ? url('/teller/slip-setor/' . $transaksi_id)
+                : url('/teller/slip-tarik/' . $transaksi_id);
+
+            $jenisLabel = match($jenis) {
+                'setor' => 'Setoran Tunai',
+                'tarik' => 'Penarikan Tunai',
+                'koreksi_setor' => 'Koreksi Setor (Batal Uang Palsu/Robek)',
+                'koreksi_tarik' => 'Koreksi Tarik',
+                default => 'Transaksi'
+            };
+
+            return redirect('/teller/dashboard')
+                ->with('success', "Transaksi {$jenisLabel} berhasil diproses dengan Kode Sandi [{$kode_sandi}]! Menunggu pengesahan Supervisor.")
+                ->with('slip_url', $slipUrl)
+                ->with('slip_jenis', $jenisLabel);
 
         } catch (\Exception $e) {
             DB::rollback();

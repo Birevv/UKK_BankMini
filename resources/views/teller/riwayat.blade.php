@@ -8,28 +8,40 @@
 </head>
 <body class="bg-slate-50 font-sans">
 
-    <!-- NAVBAR DENGAN PROFIL DROPDOWN -->
-    <nav class="bg-emerald-600 text-white shadow-md relative">
+    <!-- NAVBAR TELLER KONSISTEN DENGAN ADMIN -->
+    <nav class="bg-slate-800 text-white shadow-md relative">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
-                <div class="text-xl font-bold tracking-wider">E-Teller | Loket Transaksi</div>
+                <div class="text-xl font-bold tracking-wider">LKM Mitra Siswa Abadi</div>
                 <div class="flex items-center space-x-6">
-                    <a href="{{ url('/teller/dashboard') }}" class="text-emerald-100 hover:text-white transition font-medium">Dashboard</a>
+                    <a href="{{ url('/teller/dashboard') }}" class="text-slate-300 hover:text-white transition font-medium">Dashboard</a>
                     <a href="{{ url('/teller/riwayat') }}" class="text-white font-bold underline decoration-2 underline-offset-4">Riwayat Saya</a>
+                    <a href="{{ url('/teller/pengajuan-kas') }}" class="text-slate-300 hover:text-white transition font-medium flex items-center">
+                        <svg class="w-4 h-4 mr-1 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        Pengajuan Kas
+                    </a>
+                    <a href="{{ url('/teller/daily-report') }}" class="text-slate-300 hover:text-white transition font-medium flex items-center">
+                        <svg class="w-4 h-4 mr-1 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        Tutup Kas
+                    </a>
+                    <a href="{{ url('/teller/absensi-avalis') }}" class="text-slate-300 hover:text-white transition font-medium flex items-center">
+                        <svg class="w-4 h-4 mr-1 text-emerald-400" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14h-2v-4H6v-2h4V7h2v4h4v2h-4v4z"/></svg>
+                        Absensi Avalis
+                    </a>
 
                     <!-- PROFIL DROPDOWN -->
                     <div class="relative ml-3">
                         <div>
-                            <button onclick="toggleDropdown()" id="profile-btn" class="flex items-center space-x-3 focus:outline-none bg-emerald-700 hover:bg-emerald-800 py-1.5 px-3 rounded-full transition border border-emerald-500">
+                            <button onclick="toggleDropdown()" id="profile-btn" class="flex items-center space-x-2 focus:outline-none bg-slate-700 hover:bg-slate-600 py-1.5 px-3 rounded-full transition border border-slate-600">
                                 @if(Auth::user()->foto)
-                                    <img src="{{ asset('storage/'.Auth::user()->foto) }}" alt="Foto" class="w-8 h-8 rounded-full object-cover border-2 border-emerald-400">
+                                    <img src="{{ asset('storage/'.Auth::user()->foto) }}" alt="Foto" class="w-7 h-7 rounded-full object-cover">
                                 @else
-                                    <div class="w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold text-sm border-2 border-emerald-300">
+                                    <div class="w-7 h-7 rounded-full bg-slate-500 text-white flex items-center justify-center font-bold text-xs">
                                         {{ strtoupper(substr(Auth::user()->nama_petugas ?? 'P', 0, 1)) }}
                                     </div>
                                 @endif
                                 <span class="text-sm font-medium hidden sm:inline">{{ Auth::user()->nama_petugas }}</span>
-                                <svg class="w-4 h-4 text-emerald-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                <svg class="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                             </button>
                         </div>
 
@@ -38,7 +50,7 @@
                             <div class="px-4 py-3 border-b border-slate-100">
                                 <p class="text-xs text-slate-400 uppercase tracking-wider font-bold">Masuk Sebagai</p>
                                 <p class="text-sm font-bold text-slate-800 truncate">{{ Auth::user()->nama_petugas }}</p>
-                                <span class="inline-block bg-emerald-100 text-emerald-800 text-xs px-2 py-0.5 rounded-full font-bold mt-1 uppercase">
+                                <span class="inline-block bg-slate-100 text-slate-800 text-xs px-2 py-0.5 rounded-full font-bold mt-1 uppercase">
                                     {{ Auth::user()->role }}
                                 </span>
                             </div>
@@ -107,10 +119,19 @@
                                 <span class="bg-emerald-100 text-emerald-700 font-bold px-2 py-1 rounded text-xs uppercase">{{ $r->status }}</span>
                             @endif
                         </td>
-                        <td class="py-4 px-6 text-center">
+                        <td class="py-4 px-6 text-center whitespace-nowrap space-x-1">
                             @if($r->status != 'dibatalkan')
-                                <button onclick="bukaModalVoid({{ $r->id }}, '{{ $r->nama_siswa }}', '{{ $r->jenis_transaksi }}', 'Rp {{ number_format($r->nominal, 0, ',', '.') }}')" class="bg-amber-100 hover:bg-amber-200 text-amber-800 font-bold py-1.5 px-4 rounded text-xs transition shadow-sm border border-amber-300">
-                                    Void / Koreksi
+                                @if($r->jenis_transaksi === 'setor')
+                                    <a href="{{ url('/teller/slip-setor/'.$r->id) }}" target="_blank" class="inline-block bg-blue-50 hover:bg-blue-100 text-blue-800 font-bold py-1.5 px-3 rounded text-xs transition border border-blue-200" title="Cetak Slip Setoran">
+                                        Cetak Slip
+                                    </a>
+                                @else
+                                    <a href="{{ url('/teller/slip-tarik/'.$r->id) }}" target="_blank" class="inline-block bg-rose-50 hover:bg-rose-100 text-rose-800 font-bold py-1.5 px-3 rounded text-xs transition border border-rose-200" title="Cetak Slip Penarikan">
+                                        Cetak Slip
+                                    </a>
+                                @endif
+                                <button onclick="bukaModalVoid({{ $r->id }}, '{{ $r->nama_siswa }}', '{{ $r->jenis_transaksi }}', 'Rp {{ number_format($r->nominal, 0, ',', '.') }}')" class="bg-amber-100 hover:bg-amber-200 text-amber-800 font-bold py-1.5 px-3 rounded text-xs transition shadow-sm border border-amber-300">
+                                    Void
                                 </button>
                             @else
                                 <span class="text-xs text-slate-400 italic">Telah Di-Void</span>

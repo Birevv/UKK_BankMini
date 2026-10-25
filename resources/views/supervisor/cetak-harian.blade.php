@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan Harian LKM - Dinamis</title>
+    <title>Laporan Harian</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { font-family: 'Times New Roman', Times, serif; color: black; background: #e2e8f0; }
@@ -25,9 +25,16 @@
 </head>
 <body>
 
-    <div class="max-w-4xl mx-auto mt-4 mb-4 text-right no-print">
-        <a href="{{ url('/supervisor/laporan') }}" class="bg-slate-500 text-white px-4 py-2 rounded mr-2">&larr; Kembali</a>
-        <button onclick="window.print()" class="bg-indigo-600 text-white px-6 py-2 rounded font-bold shadow-md">🖨️ Cetak Laporan</button>
+    <div class="max-w-4xl mx-auto mt-4 mb-4 flex justify-end items-stretch gap-2 font-sans no-print">
+        <a href="{{ url('/supervisor/laporan') }}" class="bg-slate-500 hover:bg-slate-600 text-white py-2.5 px-5 rounded-lg text-sm font-bold shadow-sm transition flex items-center">
+            &larr; Kembali
+        </a>
+        <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-900 text-white py-2.5 px-5 rounded-lg text-sm font-bold shadow-sm transition flex items-center">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+            </svg>
+            Cetak Laporan
+        </button>
     </div>
 
     <div class="kertas">

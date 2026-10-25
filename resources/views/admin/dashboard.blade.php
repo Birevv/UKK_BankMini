@@ -18,9 +18,15 @@
                     <a href="{{ url('/admin/dashboard') }}" class="text-white font-bold underline decoration-2 underline-offset-4">Dashboard</a>
                     <!-- Navigasi Tidak Aktif -->
                     <a href="{{ url('/admin/data-nasabah') }}" class="text-slate-300 hover:text-white transition font-medium">Manajemen Nasabah</a>
+                    <a href="{{ url('/avalis/petugas') }}" class="text-slate-300 hover:text-white transition font-medium">Petugas Avalis</a>
+                    <a href="{{ url('/laporan/jurnal') }}" class="text-slate-300 hover:text-white transition font-medium">Jurnal</a>
                     <a href="{{ url('/admin/audit') }}" class="text-slate-300 hover:text-white transition font-medium flex items-center">
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
-                        Jejak Audit (Log)
+                        Jejak Audit
+                    </a>
+                    <a href="{{ url('/admin/absensi-avalis') }}" class="text-slate-300 hover:text-white transition font-medium flex items-center">
+                        <svg class="w-4 h-4 mr-1 text-emerald-400" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14h-2v-4H6v-2h4V7h2v4h4v2h-4v4z"/></svg>
+                        Absensi
                     </a>
 
                     <div class="relative ml-3">
@@ -111,7 +117,7 @@
                         <th class="py-3 px-4 font-bold border-b border-slate-200 text-sm">Nama Petugas</th>
                         <th class="py-3 px-4 font-bold border-b border-slate-200 text-sm">Username</th>
                         <th class="py-3 px-4 font-bold border-b border-slate-200 text-sm">Jabatan</th>
-                        <th class="py-3 px-4 font-bold border-b border-slate-200 text-sm text-center">Aksi & Kontrol</th>
+                        <th class="py-3 px-4 font-bold border-b border-slate-200 text-sm text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="text-slate-700 text-sm">
