@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        html {
+            scrollbar-gutter: stable;
+            overflow-y: scroll;
+        }
+    </style>
 </head>
 <body class="bg-slate-50 font-sans">
 
@@ -15,7 +21,7 @@
                 <div class="text-xl font-bold tracking-wider">LKM Mitra Siswa Abadi</div>
                 <div class="flex items-center space-x-6">
                     <!-- Navigasi Aktif -->
-                    <a href="{{ url('/admin/dashboard') }}" class="text-white font-bold underline decoration-2 underline-offset-4">Dashboard</a>
+                    <a href="{{ url('/admin/dashboard') }}" class="text-white font-medium underline decoration-2 underline-offset-4">Dashboard</a>
                     <!-- Navigasi Tidak Aktif -->
                     <a href="{{ url('/admin/data-nasabah') }}" class="text-slate-300 hover:text-white transition font-medium">Manajemen Nasabah</a>
                     <a href="{{ url('/avalis/petugas') }}" class="text-slate-300 hover:text-white transition font-medium">Petugas Avalis</a>

@@ -6,6 +6,10 @@
     <title>Buku Tabungan Nasabah - {{ $nasabah->nama_siswa }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        html {
+            scrollbar-gutter: stable;
+            overflow-y: scroll;
+        }
         .tabel-buku {
             border-collapse: collapse;
             width: 100%;
@@ -46,7 +50,7 @@
                 <div class="text-xl font-bold tracking-wider">LKM Mitra Siswa Abadi</div>
                 <div class="flex items-center space-x-6">
                     <a href="{{ url('/admin/dashboard') }}" class="text-slate-300 hover:text-white transition font-medium">Dashboard</a>
-                    <a href="{{ url('/admin/data-nasabah') }}" class="text-white font-bold underline decoration-2 underline-offset-4">Manajemen Nasabah</a>
+                    <a href="{{ url('/admin/data-nasabah') }}" class="text-white font-medium underline decoration-2 underline-offset-4">Manajemen Nasabah</a>
                     <a href="{{ url('/avalis/petugas') }}" class="text-slate-300 hover:text-white transition font-medium">Petugas Avalis</a>
                     <a href="{{ url('/laporan/jurnal') }}" class="text-slate-300 hover:text-white transition font-medium">Jurnal</a>
                     <a href="{{ url('/admin/audit') }}" class="text-slate-300 hover:text-white transition font-medium">Jejak Audit</a>
