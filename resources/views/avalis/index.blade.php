@@ -56,27 +56,38 @@
                 <div class="text-xl font-bold tracking-wider">LKM Mitra Siswa Abadi</div>
 
                 <div class="flex items-center space-x-6">
-                    @if($role === 'admin')
+                    @if(Auth::user()->role === 'admin')
                         <a href="{{ url('/admin/dashboard') }}" class="text-slate-300 hover:text-white transition font-medium">Dashboard</a>
                         <a href="{{ url('/admin/data-nasabah') }}" class="text-slate-300 hover:text-white transition font-medium">Manajemen Nasabah</a>
+                        <a href="{{ url('/avalis/petugas') }}" class="text-slate-300 hover:text-white transition font-medium">Petugas Avalis</a>
+                        <a href="{{ url('/laporan/jurnal') }}" class="text-slate-300 hover:text-white transition font-medium">Jurnal</a>
                         <a href="{{ url('/admin/audit') }}" class="text-slate-300 hover:text-white transition font-medium">Jejak Audit</a>
                         <a href="{{ url('/admin/absensi-avalis') }}" class="text-white font-bold underline decoration-2 underline-offset-4 flex items-center">
-                            <svg class="w-4 h-4 mr-1.5 text-emerald-400" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14h-2v-4H6v-2h4V7h2v4h4v2h-4v4z"/></svg>
-                            Absensi Avalis
+                            <svg class="w-4 h-4 mr-1 text-emerald-400" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14h-2v-4H6v-2h4V7h2v4h4v2h-4v4z"/></svg>
+                            Absensi
                         </a>
-                    @elseif($role === 'teller')
-                        <a href="{{ url('/teller/dashboard') }}" class="text-slate-300 hover:text-white transition font-medium">Dashboard</a>
-                        <a href="{{ url('/teller/riwayat') }}" class="text-slate-300 hover:text-white transition font-medium">Riwayat Saya</a>
-                        <a href="{{ url('/teller/absensi-avalis') }}" class="text-white font-bold underline decoration-2 underline-offset-4 flex items-center">
-                            <svg class="w-4 h-4 mr-1.5 text-emerald-400" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14h-2v-4H6v-2h4V7h2v4h4v2h-4v4z"/></svg>
-                            Absensi Avalis
-                        </a>
-                    @else
+                    @elseif(str_contains(Auth::user()->role, 'supervisor') || str_contains(Auth::user()->role, 'accounting'))
                         <a href="{{ url('/supervisor/dashboard') }}" class="text-slate-300 hover:text-white transition font-medium">Dashboard</a>
                         <a href="{{ url('/supervisor/laporan') }}" class="text-slate-300 hover:text-white transition font-medium">Laporan Transaksi</a>
+                        <a href="{{ url('/supervisor/daily-report') }}" class="text-slate-300 hover:text-white transition font-medium">Daily Report</a>
+                        <a href="{{ url('/supervisor/pengajuan-kas') }}" class="text-slate-300 hover:text-white transition font-medium">Pengajuan Kas</a>
+                        <a href="{{ url('/laporan/jurnal') }}" class="text-slate-300 hover:text-white transition font-medium">Jurnal</a>
+                        <a href="{{ url('/laporan/saldo-produk') }}" class="text-slate-300 hover:text-white transition font-medium">Produk</a>
+                        <a href="{{ url('/laporan/tahunan') }}" class="text-slate-300 hover:text-white transition font-medium">Tahunan</a>
+                        <a href="{{ url('/avalis/petugas') }}" class="text-slate-300 hover:text-white transition font-medium">Data Teller</a>
                         <a href="{{ url('/supervisor/absensi-avalis') }}" class="text-white font-bold underline decoration-2 underline-offset-4 flex items-center">
-                            <svg class="w-4 h-4 mr-1.5 text-emerald-400" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14h-2v-4H6v-2h4V7h2v4h4v2h-4v4z"/></svg>
-                            Absensi Avalis
+                            <svg class="w-4 h-4 mr-1 text-emerald-400" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14h-2v-4H6v-2h4V7h2v4h4v2h-4v4z"/></svg>
+                            Absensi
+                        </a>
+                    @else
+                        <a href="{{ url('/teller/dashboard') }}" class="text-slate-300 hover:text-white transition font-medium">Dashboard</a>
+                        <a href="{{ url('/teller/riwayat') }}" class="text-slate-300 hover:text-white transition font-medium">Riwayat Saya</a>
+                        <a href="{{ url('/teller/daily-report') }}" class="text-slate-300 hover:text-white transition font-medium">Tutup Kas</a>
+                        <a href="{{ url('/teller/pengajuan-kas') }}" class="text-slate-300 hover:text-white transition font-medium">Pengajuan Kas</a>
+                        <a href="{{ url('/avalis/petugas') }}" class="text-slate-300 hover:text-white transition font-medium">Petugas Avalis</a>
+                        <a href="{{ url('/teller/absensi-avalis') }}" class="text-white font-bold underline decoration-2 underline-offset-4 flex items-center">
+                            <svg class="w-4 h-4 mr-1 text-emerald-400" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14h-2v-4H6v-2h4V7h2v4h4v2h-4v4z"/></svg>
+                            Absensi
                         </a>
                     @endif
 

@@ -8,43 +8,74 @@
 </head>
 <body class="bg-slate-50 font-sans text-slate-800">
 
-    <!-- NAVBAR KONSISTEN DENGAN ADMIN (bg-slate-800) -->
+    <!-- NAVBAR ADMIN KONSISTEN -->
     <nav class="bg-slate-800 text-white shadow-md relative">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
-                <div class="flex items-center space-x-3">
-                    <span class="text-xl font-bold tracking-wider">LKM Mitra Siswa Abadi</span>
-                    <span class="bg-emerald-600 text-white text-xs px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">Master Avalis</span>
-                </div>
+                <div class="text-xl font-bold tracking-wider">LKM Mitra Siswa Abadi</div>
 
-                <div class="flex items-center space-x-6 text-sm">
-                    @if(str_contains($role, 'admin'))
+                <div class="flex items-center space-x-6">
+                    @if(Auth::user()->role === 'admin')
                         <a href="{{ url('/admin/dashboard') }}" class="text-slate-300 hover:text-white transition font-medium">Dashboard</a>
-                        <a href="{{ url('/admin/data-nasabah') }}" class="text-slate-300 hover:text-white transition font-medium">Nasabah</a>
-                    @elseif(str_contains($role, 'supervisor') || str_contains($role, 'accounting'))
+                        <a href="{{ url('/admin/data-nasabah') }}" class="text-slate-300 hover:text-white transition font-medium">Manajemen Nasabah</a>
+                        <a href="{{ url('/avalis/petugas') }}" class="text-white font-bold underline decoration-2 underline-offset-4">Petugas Avalis</a>
+                        <a href="{{ url('/laporan/jurnal') }}" class="text-slate-300 hover:text-white transition font-medium">Jurnal</a>
+                        <a href="{{ url('/admin/audit') }}" class="text-slate-300 hover:text-white transition font-medium">Jejak Audit</a>
+                        <a href="{{ url('/admin/absensi-avalis') }}" class="text-slate-300 hover:text-white transition font-medium flex items-center">
+                            <svg class="w-4 h-4 mr-1 text-emerald-400" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14h-2v-4H6v-2h4V7h2v4h4v2h-4v4z"/></svg>
+                            Absensi
+                        </a>
+                    @elseif(str_contains(Auth::user()->role, 'supervisor') || str_contains(Auth::user()->role, 'accounting'))
                         <a href="{{ url('/supervisor/dashboard') }}" class="text-slate-300 hover:text-white transition font-medium">Dashboard</a>
+                        <a href="{{ url('/supervisor/laporan') }}" class="text-slate-300 hover:text-white transition font-medium">Laporan Transaksi</a>
                         <a href="{{ url('/supervisor/daily-report') }}" class="text-slate-300 hover:text-white transition font-medium">Daily Report</a>
                         <a href="{{ url('/supervisor/pengajuan-kas') }}" class="text-slate-300 hover:text-white transition font-medium">Pengajuan Kas</a>
-                        <a href="{{ url('/laporan/jurnal') }}" class="text-slate-300 hover:text-white transition font-medium">Jurnal Akuntansi</a>
+                        <a href="{{ url('/laporan/jurnal') }}" class="text-slate-300 hover:text-white transition font-medium">Jurnal</a>
+                        <a href="{{ url('/laporan/saldo-produk') }}" class="text-slate-300 hover:text-white transition font-medium">Produk</a>
+                        <a href="{{ url('/laporan/tahunan') }}" class="text-slate-300 hover:text-white transition font-medium">Tahunan</a>
+                        <a href="{{ url('/avalis/petugas') }}" class="text-white font-bold underline decoration-2 underline-offset-4">Data Teller</a>
+                        <a href="{{ url('/supervisor/absensi-avalis') }}" class="text-slate-300 hover:text-white transition font-medium">Absensi</a>
                     @else
                         <a href="{{ url('/teller/dashboard') }}" class="text-slate-300 hover:text-white transition font-medium">Dashboard</a>
+                        <a href="{{ url('/teller/riwayat') }}" class="text-slate-300 hover:text-white transition font-medium">Riwayat Saya</a>
+                        <a href="{{ url('/teller/daily-report') }}" class="text-slate-300 hover:text-white transition font-medium">Tutup Kas</a>
                         <a href="{{ url('/teller/pengajuan-kas') }}" class="text-slate-300 hover:text-white transition font-medium">Pengajuan Kas</a>
+                        <a href="{{ url('/avalis/petugas') }}" class="text-white font-bold underline decoration-2 underline-offset-4">Petugas Avalis</a>
+                        <a href="{{ url('/teller/absensi-avalis') }}" class="text-slate-300 hover:text-white transition font-medium">Absensi</a>
                     @endif
 
-                    <a href="{{ url('/avalis/petugas') }}" class="text-white font-bold underline decoration-2 underline-offset-4 flex items-center">
-                        <svg class="w-4 h-4 mr-1 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-                        Data Petugas Avalis
-                    </a>
+                    <!-- PROFIL DROPDOWN -->
+                    <div class="relative ml-3">
+                        <button onclick="toggleDropdown()" id="profile-btn" class="flex items-center space-x-2 focus:outline-none bg-slate-700 hover:bg-slate-600 py-1.5 px-3 rounded-full transition border border-slate-600">
+                            @if(Auth::user()->foto)
+                                <img src="{{ asset('storage/'.Auth::user()->foto) }}" alt="Foto" class="w-7 h-7 rounded-full object-cover">
+                            @else
+                                <div class="w-7 h-7 rounded-full bg-slate-500 text-white flex items-center justify-center font-bold text-xs">
+                                    {{ strtoupper(substr(Auth::user()->nama_petugas ?? 'A', 0, 1)) }}
+                                </div>
+                            @endif
+                            <span class="text-sm font-medium hidden sm:inline">{{ Auth::user()->nama_petugas }}</span>
+                            <svg class="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
 
-                    <a href="{{ url('/absensi-avalis') }}" class="text-slate-300 hover:text-white transition font-medium flex items-center">
-                        <svg class="w-4 h-4 mr-1 text-emerald-400" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14h-2v-4H6v-2h4V7h2v4h4v2h-4v4z"/></svg>
-                        Lembar Absensi Digital
-                    </a>
-
-                    <form action="{{ route('logout') }}" method="POST" class="inline">
-                        @csrf
-                        <button type="submit" class="text-rose-400 hover:text-rose-300 font-medium text-xs transition bg-slate-700 hover:bg-slate-600 px-3 py-1.5 rounded">Keluar</button>
-                    </form>
+                        <div id="profile-dropdown" class="hidden absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-xl py-2 text-slate-700 border border-slate-200 z-50">
+                            <div class="px-4 py-3 border-b border-slate-100">
+                                <p class="text-xs text-slate-400 uppercase tracking-wider font-bold">Masuk Sebagai</p>
+                                <p class="text-sm font-bold text-slate-800 truncate">{{ Auth::user()->nama_petugas }}</p>
+                                <span class="inline-block bg-slate-100 text-slate-800 text-xs px-2 py-0.5 rounded-full font-bold mt-1 uppercase">{{ strtoupper(Auth::user()->role) }}</span>
+                            </div>
+                            <a href="{{ url(Auth::user()->role === 'supervisor' ? '/supervisor/profil' : (Auth::user()->role === 'teller' ? '/teller/profil' : '/admin/profil')) }}" class="block px-4 py-2.5 text-sm hover:bg-slate-50 text-slate-700 flex items-center font-medium">
+                                <svg class="w-4 h-4 mr-2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg> Lihat Profil
+                            </a>
+                            <div class="border-t border-slate-100 my-1"></div>
+                            <form action="{{ route('logout') }}" method="POST">
+                                @csrf
+                                <button type="submit" class="w-full text-left px-4 py-2.5 text-sm text-rose-600 hover:bg-rose-50 flex items-center font-bold">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg> Keluar Sistem
+                                </button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -330,6 +361,18 @@
         function closeModalTambah() { document.getElementById('modal-tambah').classList.add('hidden'); }
         function openModalBulk() { document.getElementById('modal-bulk').classList.remove('hidden'); }
         function closeModalBulk() { document.getElementById('modal-bulk').classList.add('hidden'); }
+
+        function toggleDropdown() {
+            const dropdown = document.getElementById('profile-dropdown');
+            dropdown.classList.toggle('hidden');
+        }
+        window.addEventListener('click', function(e) {
+            const btn = document.getElementById('profile-btn');
+            const dropdown = document.getElementById('profile-dropdown');
+            if (btn && dropdown && !btn.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.classList.add('hidden');
+            }
+        });
 
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
