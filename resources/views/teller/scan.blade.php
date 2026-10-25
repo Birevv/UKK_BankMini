@@ -14,14 +14,14 @@
         }
     </style>
 </head>
-<body class="bg-slate-50 font-sans">
+<body class="bg-slate-50 font-sans" style="scrollbar-gutter: stable; overflow-y: scroll;">
 
     <!-- NAVBAR TELLER KONSISTEN DENGAN ADMIN -->
     <nav class="bg-slate-800 text-white shadow-md">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
-                <div class="text-xl font-bold tracking-wider">LKM Mitra Siswa Abadi</div>
-                <a href="{{ url('/teller/dashboard') }}" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded text-sm font-bold transition border border-slate-600">
+                <div class="text-xl font-bold tracking-wider whitespace-nowrap shrink-0">LKM Mitra Siswa Abadi</div>
+                <a href="{{ url('/teller/dashboard') }}" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded text-sm font-bold transition border border-slate-600 whitespace-nowrap focus:outline-none">
                     &larr; Kembali ke Dashboard
                 </a>
             </div>

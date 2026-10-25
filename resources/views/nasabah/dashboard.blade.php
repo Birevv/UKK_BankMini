@@ -18,21 +18,21 @@
     <nav class="bg-slate-800 text-white shadow-md relative">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
-                <div class="text-xl font-bold tracking-wider">LKM Mitra Siswa Abadi</div>
+                <div class="text-lg xl:text-xl font-bold tracking-wider whitespace-nowrap shrink-0 mr-4">LKM Mitra Siswa Abadi</div>
 
-                <div class="flex items-center space-x-6">
-                    <a href="{{ url('/nasabah/dashboard') }}" class="text-white font-medium underline decoration-2 underline-offset-4">Dashboard</a>
+                <div class="flex items-center space-x-3 lg:space-x-5 xl:space-x-6 text-xs xl:text-sm font-medium">
+                    <a href="{{ url('/nasabah/dashboard') }}" class="text-white font-medium underline decoration-2 underline-offset-4 whitespace-nowrap focus:outline-none">Dashboard</a>
                     @if($nasabah)
-                        <a href="{{ url('/buku-tabungan/'.$nasabah->id) }}" class="text-slate-300 hover:text-white transition font-medium">Buku Tabungan Digital</a>
+                        <a href="{{ url('/buku-tabungan/'.$nasabah->id) }}" class="text-slate-300 hover:text-white transition font-medium whitespace-nowrap focus:outline-none">Buku Tabungan Digital</a>
                     @endif
 
                     <!-- PROFIL DROPDOWN -->
-                    <div class="relative ml-3">
-                        <button onclick="toggleDropdown()" id="profile-btn" class="flex items-center space-x-2 focus:outline-none bg-slate-700 hover:bg-slate-600 py-1.5 px-3 rounded-full transition border border-slate-600">
+                    <div class="relative ml-2 shrink-0">
+                        <button onclick="toggleDropdown()" id="profile-btn" class="flex items-center space-x-2 focus:outline-none bg-slate-700 hover:bg-slate-600 py-1.5 px-3 rounded-full transition border border-slate-600 whitespace-nowrap">
                             <div class="w-7 h-7 rounded-full bg-slate-500 text-white flex items-center justify-center font-bold text-xs">
                                 {{ strtoupper(substr($nasabah->nama_siswa ?? Auth::user()->nama_petugas ?? 'N', 0, 1)) }}
                             </div>
-                            <span class="text-sm font-medium hidden sm:inline">{{ $nasabah->nama_siswa ?? Auth::user()->nama_petugas ?? 'Nasabah' }}</span>
+                            <span class="text-sm font-medium hidden sm:inline whitespace-nowrap">{{ $nasabah->nama_siswa ?? Auth::user()->nama_petugas ?? 'Nasabah' }}</span>
                             <svg class="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </button>
 

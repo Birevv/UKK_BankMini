@@ -6,14 +6,14 @@
     <title>Profil Administrator</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-50 font-sans">
+<body class="bg-slate-50 font-sans" style="scrollbar-gutter: stable; overflow-y: scroll;">
 
     <!-- NAVBAR ADMIN -->
     <nav class="bg-slate-800 text-white shadow-md">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
-                <div class="text-xl font-bold tracking-wider">Administrator</div>
-                <a href="{{ url('/admin/dashboard') }}" class="text-slate-300 hover:text-white font-medium text-sm transition">&larr; Kembali ke Dashboard</a>
+                <div class="text-xl font-bold tracking-wider whitespace-nowrap shrink-0">LKM Mitra Siswa Abadi</div>
+                <a href="{{ url('/admin/dashboard') }}" class="text-slate-300 hover:text-white font-medium text-sm transition whitespace-nowrap focus:outline-none">&larr; Kembali ke Dashboard</a>
             </div>
         </div>
     </nav>
