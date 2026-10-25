@@ -212,9 +212,14 @@ class NasabahController extends Controller
         $sukses = 0;
         $gagal = 0;
 
+        // Auto-detect delimiter (; or ,)
+        $firstLine = fgets($handle);
+        $delimiter = (substr_count($firstLine, ';') > substr_count($firstLine, ',')) ? ';' : ',';
+        rewind($handle);
+
         DB::beginTransaction();
         try {
-            while (($row = fgetcsv($handle, 1000, ",")) !== false) {
+            while (($row = fgetcsv($handle, 1000, $delimiter)) !== false) {
                 if ($header) { $header = false; continue; }
 
                 if(!isset($row[0]) || !isset($row[1])) continue;
