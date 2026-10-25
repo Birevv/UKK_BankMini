@@ -11,34 +11,49 @@ class DatabaseSeeder extends Seeder
 
     public function run(): void
     {
-        DB::table('users')->insert([
+        $users = [
             [
                 'username' => 'admin',
                 'nama_petugas' => 'Administrator Utama',
                 'password' => Hash::make('admin123'),
                 'role' => 'admin',
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
             [
                 'username' => 'teller1',
                 'nama_petugas' => 'Petugas Loket Teller',
                 'password' => Hash::make('teller123'),
                 'role' => 'teller',
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
             [
                 'username' => 'spv1',
                 'nama_petugas' => 'Kepala Bank Mini',
                 'password' => Hash::make('spv123'),
                 'role' => 'supervisor',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]
-        ]);
+            ],
+        ];
 
-        DB::table('nasabah')->insert([
+        foreach ($users as $userData) {
+            $user = DB::table('users')->where('username', $userData['username'])->first();
+            if ($user) {
+                DB::table('users')->where('id', $user->id)->update([
+                    'nama_petugas' => $userData['nama_petugas'],
+                    'password' => $userData['password'],
+                    'role' => $userData['role'],
+                    'updated_at' => now(),
+                ]);
+            } else {
+                DB::table('users')->insert([
+                    'username' => $userData['username'],
+                    'nama_petugas' => $userData['nama_petugas'],
+                    'password' => $userData['password'],
+                    'role' => $userData['role'],
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+        }
+
+        $nasabahs = [
             [
                 'no_rekening' => '202601001',
                 'nis' => '17763',
@@ -49,9 +64,28 @@ class DatabaseSeeder extends Seeder
                 'password' => Hash::make('password123'),
                 'pin_keamanan' => Hash::make('240808'),
                 'saldo' => 50000,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]
-        ]);
+                'status' => 'aktif',
+                'kategori' => 'siswa',
+            ],
+        ];
+
+        foreach ($nasabahs as $nasabahData) {
+            $nasabah = DB::table('nasabah')->where('nis', $nasabahData['nis'])->first();
+            if ($nasabah) {
+                DB::table('nasabah')->where('id', $nasabah->id)->update([
+                    'nama_siswa' => $nasabahData['nama_siswa'],
+                    'kelas' => $nasabahData['kelas'],
+                    'jurusan' => $nasabahData['jurusan'],
+                    'status' => $nasabahData['status'],
+                    'kategori' => $nasabahData['kategori'],
+                    'updated_at' => now(),
+                ]);
+            } else {
+                DB::table('nasabah')->insert(array_merge($nasabahData, [
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]));
+            }
+        }
     }
 }
